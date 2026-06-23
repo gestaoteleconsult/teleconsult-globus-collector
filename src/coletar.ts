@@ -21,6 +21,9 @@ const syncCarrosGlobus = async () => {
       PREFIXOVEIC
   `)
 
+  console.log("Enviando dados de carros para a API do Globus...")
+  console.log(`Total de carros a serem enviados: ${data.length}`)
+
   await axios.post("https://login.teleconsult.com.br/api/inbound/globus/carros", {
     id_empresa: process.env.ID_EMPRESA,
     token: process.env.TOKEN,
@@ -45,6 +48,9 @@ const syncLinhasGlobus = async () => {
       CODIGOORGCONC is not null
   `)
 
+  console.log("Enviando dados de linhas para a API do Globus...")
+  console.log(`Total de linhas a serem enviadas: ${data.length}`)
+
   await axios.post("https://login.teleconsult.com.br/api/inbound/globus/linhas", {
     id_empresa: process.env.ID_EMPRESA,
     token: process.env.TOKEN,
@@ -68,6 +74,9 @@ const syncMotoristasGlobus = async () => {
     where
       f.SITUACAOFUNC = 'A'  
   `)
+
+  console.log("Enviando dados de motoristas para a API do Globus...")
+  console.log(`Total de motoristas a serem enviados: ${data.length}`)
 
   await axios.post("https://login.teleconsult.com.br/api/inbound/globus/motoristas", {
     id_empresa: process.env.ID_EMPRESA,
@@ -116,6 +125,9 @@ const syncViagensGlobus = async () => {
         cv.prefixoveic,
         sr.horasaidagaragem
   `)
+
+  console.log("Enviando dados de viagens para a API do Globus...")
+  console.log(`Total de viagens a serem enviadas: ${data.length}`)
 
   await axios.post("https://login.teleconsult.com.br/api/inbound/globus/viagens", {
     id_empresa: process.env.ID_EMPRESA,
