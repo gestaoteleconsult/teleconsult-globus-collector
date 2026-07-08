@@ -1,6 +1,7 @@
 import "dotenv/config"
 import axios from "axios"
 import { startOfWeek, endOfWeek, subWeeks, addWeeks, format } from 'date-fns'
+import { CronJob } from 'cron';
 
 import DbOracle from "./database/connectionManager.js"
 
@@ -147,4 +148,12 @@ const executar = async () => {
   }
 }
 
-executar()
+const job = new CronJob(
+  '0 0 3 * * *', // cronTime
+  function () {
+    executar()
+  }, // onTick
+  null, // onComplete
+  true, // start
+  'America/Sao_Paulo' // timeZone
+);
