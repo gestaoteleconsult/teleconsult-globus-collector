@@ -1,6 +1,6 @@
 import "dotenv/config"
 import axios from "axios"
-import { startOfWeek, endOfWeek, subWeeks, addWeeks, format } from 'date-fns'
+import { startOfWeek, endOfWeek, subWeeks, addWeeks, format, parseISO } from 'date-fns'
 import { CronJob } from 'cron';
 
 import DbOracle from "./database/connectionManager.js"
@@ -87,8 +87,10 @@ const syncMotoristasGlobus = async () => {
 }
 
 const syncViagensGlobus = async () => {
-  const inicio = startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 })
-  const fim = endOfWeek(addWeeks(new Date(), 0), { weekStartsOn: 1 })
+  // const inicio = startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 })
+  // const fim = endOfWeek(addWeeks(new Date(), 0), { weekStartsOn: 1 })
+  const inicio = parseISO('2024-05-01T00:00:00')
+  const fim = parseISO('2024-06-24T23:59:59')
 
   console.log(`Sincronizando dados de ${format(inicio, 'dd/MM/yyyy HH:mm:ss')} a ${format(fim, 'dd/MM/yyyy HH:mm:ss')}`)
 
