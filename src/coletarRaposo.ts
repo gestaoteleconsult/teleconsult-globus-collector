@@ -148,6 +148,8 @@ const executar = async () => {
   }
 }
 
+executar()
+
 const job = new CronJob(
   '0 0 3 * * *', // cronTime
   function () {
