@@ -89,8 +89,8 @@ const syncMotoristasGlobus = async () => {
 const syncViagensGlobus = async () => {
   // const inicio = startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 })
   // const fim = endOfWeek(addWeeks(new Date(), 0), { weekStartsOn: 1 })
-  const inicio = parseISO('2024-05-01T00:00:00')
-  const fim = parseISO('2024-07-22T23:59:59')
+  const inicio = parseISO('2026-05-01T00:00:00')
+  const fim = parseISO('2026-07-22T23:59:59')
   // const fim = parseISO('2024-06-24T23:59:59')
 
   console.log(`Sincronizando dados de ${format(inicio, 'dd/MM/yyyy HH:mm:ss')} a ${format(fim, 'dd/MM/yyyy HH:mm:ss')}`)
@@ -114,7 +114,7 @@ const syncViagensGlobus = async () => {
         fm.nomefunc f1nome,
         to_char( t_arr_viagens_guia.QTD_HORA_INI , 'yyyy-mm-dd hh24:mi:ss' ) dtg,
         frt_cadveiculos.CODIGOEMPRESA,
-        fm.CODINTFUNC as CODIGO_FUNCIONARIO
+        fm.codintfunc as CODIGO_FUNCIONARIO
       from
         t_arr_viagens_guia
         left join frt_cadveiculos
@@ -124,7 +124,7 @@ const syncViagensGlobus = async () => {
         left join T_ARR_TROCAS_FUNC
           on T_ARR_TROCAS_FUNC.COD_SEQ_GUIA = t_arr_viagens_guia.COD_SEQ_GUIA and FLG_MOT_COB = 'M'
         left Join flp_funcionarios fm
-          on fm.CODINTFUNC = T_ARR_TROCAS_FUNC.CODINTFUNC
+          on fm.codintfunc = T_ARR_TROCAS_FUNC.codintfunc
       where
         -- frt_cadveiculos.CODIGOEMPRESA = id_empresa and
         t_arr_viagens_guia.QTD_HORA_INI between to_date('${format(inicio, 'yyyy-MM-dd HH:mm:ss')}','yyyy-mm-dd hh24:mi:ss') and to_date('${format(fim, 'yyyy-MM-dd HH:mm:ss')}','yyyy-mm-dd hh24:mi:ss') 
