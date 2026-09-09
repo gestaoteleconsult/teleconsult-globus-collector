@@ -131,11 +131,17 @@ const syncViagensGlobus = async () => {
   console.log("Enviando dados de viagens para a API do Globus...")
   console.log(`Total de viagens a serem enviadas: ${data.length}`)
 
-  await axios.post("https://login.teleconsult.com.br/api/inbound/globus/viagens", {
-    id_empresa: process.env.ID_EMPRESA,
-    token: process.env.TOKEN,
-    data: data
-  })
+  const CHUNK_SIZE = 200
+  for (let i = 0; i < data.length; i += CHUNK_SIZE) {
+    const chunk = data.slice(i, i + CHUNK_SIZE)
+    console.log(`Enviando chunk ${Math.floor(i / CHUNK_SIZE) + 1}/${Math.ceil(data.length / CHUNK_SIZE)} (${chunk.length} viagens)...`)
+
+    await axios.post("https://login.teleconsult.com.br/api/inbound/globus/viagens", {
+      id_empresa: process.env.ID_EMPRESA,
+      token: process.env.TOKEN,
+      data: chunk
+    })
+  }
 }
 
 const executar = async () => {
