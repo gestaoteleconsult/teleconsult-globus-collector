@@ -86,7 +86,7 @@ const syncMotoristasGlobus = async () => {
 }
 
 const syncViagensGlobus = async () => {
-  const inicio = startOfWeek(subWeeks(new Date(), 1), { weekStartsOn: 1 })
+  const inicio = startOfWeek(subWeeks(new Date(), 2), { weekStartsOn: 1 })
   const fim = endOfWeek(addWeeks(new Date(), 0), { weekStartsOn: 1 })
   // const inicio = parseISO('2026-05-01T00:00:00')
   // const fim = parseISO('2026-07-22T23:59:59')
