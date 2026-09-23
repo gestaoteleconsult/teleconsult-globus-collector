@@ -78,6 +78,8 @@ const executar = async () => {
         codigotanque: item.globus_codigotanque
       })
 
+      console.log(data.rows)
+
       const insertList: IAbastecimentoInsert[] = data.rows.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
         return {
           company_id: item.company_id,
