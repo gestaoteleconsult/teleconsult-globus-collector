@@ -65,7 +65,8 @@ const syncMotoristasGlobus = async () => {
       f.apelidofunc,
       f.codigoempresa,
       f.fonefunc as fone,
-      TO_CHAR(f.dtnasctofunc, 'YYYY-MM-DD') as nascimento
+      TO_CHAR(f.dtnasctofunc, 'YYYY-MM-DD') as nascimento,
+      f.SITUACAOFUNC as situacao
     from
       flp_funcionarios f
     where
