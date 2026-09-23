@@ -80,7 +80,7 @@ const executar = async () => {
 
       console.log(data)
 
-      const insertList: IAbastecimentoInsert[] = data.rows.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
+      const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
         return {
           company_id: item.company_id,
           globus_ip: item.globus_ip,
