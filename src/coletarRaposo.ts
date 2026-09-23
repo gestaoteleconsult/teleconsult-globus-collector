@@ -69,11 +69,13 @@ const syncMotoristasGlobus = async () => {
       f.nomefunc,
       f.codfunc,
       f.apelidofunc,
-      f.codigoempresa
+      f.codigoempresa,
+      f.fonefunc as fone,
+      TO_CHAR(f.dtnasctofunc, 'YYYY-MM-DD') as nascimento
     from
       flp_funcionarios f
     where
-      f.SITUACAOFUNC = 'A'  
+      f.SITUACAOFUNC = 'A' or f.SITUACAOFUNC = 'F'
   `)
 
   console.log("Enviando dados de motoristas para a API do Globus...")
