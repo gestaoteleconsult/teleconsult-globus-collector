@@ -78,7 +78,7 @@ const executar = async () => {
         codigotanque: item.globus_codigotanque
       })
 
-      console.log(data)
+      console.log(data.length > 0 ? data[0] : [])
 
       const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
         let prefixo: string | number = row.PREFIXOVEIC
@@ -88,7 +88,6 @@ const executar = async () => {
         } else {
           prefixo = Number.parseInt(prefixo, 10)
         }
-
 
         return {
           company_id: item.company_id,
