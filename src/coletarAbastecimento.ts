@@ -25,7 +25,7 @@ interface IAbastecimentoRow {
 interface IAbastecimentoInsert {
   company_id: number
   globus_ip: string
-  prefixoveic: string
+  prefixoveic: string | number
   dt: string
   qtdeitemabastcarro: number
   km_abastecimento: number
@@ -81,10 +81,19 @@ const executar = async () => {
       console.log(data)
 
       const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
+        let prefixo: string | number = row.PREFIXOVEIC
+        // Verificar se prefixo tem letras
+        if (/[a-zA-Z]/.test(prefixo)) {
+          prefixo = prefixo
+        } else {
+          prefixo = Number.parseInt(prefixo, 10)
+        }
+
+
         return {
           company_id: item.company_id,
           globus_ip: item.globus_ip,
-          prefixoveic: row.PREFIXOVEIC,
+          prefixoveic: prefixo,
           dt: row.DT,
           qtdeitemabastcarro: row.QTDEITEMABASTCARRO,
           km_abastecimento: row.KMINICIALVEIC,
