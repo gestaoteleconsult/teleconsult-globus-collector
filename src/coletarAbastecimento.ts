@@ -117,26 +117,29 @@ const executar = async () => {
     // }
 
     const data = await db.raw(`
-        select
-          prefixoveic,
-          BGM_VELOCIMETRO.CODIGOVEIC,
-          TO_CHAR(DATAVELOC, 'YYYY-MM-DD') || ' ' || TO_CHAR(HORAVELOC, 'HH24:MI:SS') AS data_hora,
-          KMLITROVEIC * KMPERCORRIDOVELOC lt,
-          BGM_VELOCIMETRO.hodinicialveloc,
-          BGM_VELOCIMETRO.hodfinalveloc, 
-          BGM_VELOCIMETRO.kmpercorridoveloc, 
-          BGM_VELOCIMETRO.kmacumuladoveloc, 
-          KMLITROVEIC
-        from 
-          BGM_VELOCIMETRO 
-        left join frt_cadveiculos
-          on frt_cadveiculos.codigoveic=BGM_VELOCIMETRO.CODIGOVEIC
-        where 
-          BGM_VELOCIMETRO.DATAVELOC between to_date('2026-01-09','yyyy-mm-dd') and to_date('2026-1-10','yyyy-mm-dd')
-        order by
-          prefixoveic,
-          data_hora  
-      `)
+      select
+        prefixoveic,
+        BGM_VELOCIMETRO.CODIGOVEIC,
+        TO_CHAR(DATAVELOC, 'YYYY-MM-DD') || ' ' || TO_CHAR(HORAVELOC, 'HH24:MI:SS') AS data_hora,
+        KMLITROVEIC * KMPERCORRIDOVELOC lt,
+        BGM_VELOCIMETRO.hodinicialveloc,
+        BGM_VELOCIMETRO.hodfinalveloc, 
+        BGM_VELOCIMETRO.kmpercorridoveloc, 
+        BGM_VELOCIMETRO.kmacumuladoveloc, 
+        KMLITROVEIC
+      from 
+        BGM_VELOCIMETRO 
+      left join frt_cadveiculos
+        on frt_cadveiculos.codigoveic=BGM_VELOCIMETRO.CODIGOVEIC
+      where 
+        BGM_VELOCIMETRO.DATAVELOC between to_date(':d1','yyyy-mm-dd') and to_date(':d2','yyyy-mm-dd')
+      order by
+        prefixoveic,
+        data_hora  
+      `, {
+      d1: format(subDays(new Date(), 90), "yyyy-MM-dd"),
+      d2: format(new Date(), "yyyy-MM-dd")
+    })
 
     console.log(data.length > 0 ? data[0] : [])
 
