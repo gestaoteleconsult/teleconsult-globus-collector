@@ -93,7 +93,11 @@ const executar = async () => {
       })
 
       if (insertList.length > 0) {
-        await api.post("/inbound/globus/abastecimento", insertList)
+        await api.post("/inbound/globus/abastecimento", {
+          id_empresa: process.env.ID_EMPRESA,
+          token: process.env.TOKEN,
+          data: insertList
+        })
       }
     }
   } catch (error) {
