@@ -132,7 +132,7 @@ const executar = async () => {
       left join frt_cadveiculos
         on frt_cadveiculos.codigoveic=BGM_VELOCIMETRO.CODIGOVEIC
       where 
-        BGM_VELOCIMETRO.DATAVELOC between to_date(':d1','yyyy-mm-dd') and to_date(':d2','yyyy-mm-dd')
+        BGM_VELOCIMETRO.DATAVELOC between to_date(:d1,'yyyy-mm-dd') and to_date(:d2,'yyyy-mm-dd')
       order by
         prefixoveic,
         data_hora  
