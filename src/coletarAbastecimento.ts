@@ -51,72 +51,72 @@ const executar = async () => {
   try {
     const db = DbOracle.getConnection()
 
-    const config = await api.get<IGlobusAbastecimentoConfig[]>("/inbound/globus/config", {
-      params: {
-        id_empresa: process.env.ID_EMPRESA,
-        globus_ip: process.env.ORCL_HOST
-      }
-    })
+    // const config = await api.get<IGlobusAbastecimentoConfig[]>("/inbound/globus/config", {
+    //   params: {
+    //     id_empresa: process.env.ID_EMPRESA,
+    //     globus_ip: process.env.ORCL_HOST
+    //   }
+    // })
 
-    console.log(config.data)
+    // console.log(config.data)
 
-    for await (const item of config.data) {
-      // const data = await db.raw(`
-      //   select
-      //     prefixoveic,
-      //     to_char(DATAABASTCARRO,'yyyy-mm-dd') dt,
-      //     QTDEITEMABASTCARRO,
-      //     to_char(DATAHORAGRAVACAO,'yyyy-mm-dd hh24:mi:ss') dt_cad,
-      //     kminicialveic
-      //   from
-      //     ABA_ITEMABASTCARRO 
-      //   left join frt_cadveiculos
-      //     on frt_cadveiculos.codigoveic = ABA_ITEMABASTCARRO.CODIGOVEIC
-      //   where
-      //     ABA_ITEMABASTCARRO.DATAABASTCARRO between to_date(:d1,'yyyy-mm-dd') and to_date(:d2,'yyyy-mm-dd')
-      //     and CODIGOTANQUE = :codigotanque
-      //   order by
-      //     dt_cad,
-      //     CODIGOTPFROTA,
-      //     prefixoveic,
-      //     dt
-      // `, {
-      //   d1: format(subDays(new Date(), 90), "yyyy-MM-dd"),
-      //   d2: format(new Date(), "yyyy-MM-dd"),
-      //   codigotanque: item.globus_codigotanque
-      // })
+    // for await (const item of config.data) {
+    // const data = await db.raw(`
+    //   select
+    //     prefixoveic,
+    //     to_char(DATAABASTCARRO,'yyyy-mm-dd') dt,
+    //     QTDEITEMABASTCARRO,
+    //     to_char(DATAHORAGRAVACAO,'yyyy-mm-dd hh24:mi:ss') dt_cad,
+    //     kminicialveic
+    //   from
+    //     ABA_ITEMABASTCARRO 
+    //   left join frt_cadveiculos
+    //     on frt_cadveiculos.codigoveic = ABA_ITEMABASTCARRO.CODIGOVEIC
+    //   where
+    //     ABA_ITEMABASTCARRO.DATAABASTCARRO between to_date(:d1,'yyyy-mm-dd') and to_date(:d2,'yyyy-mm-dd')
+    //     and CODIGOTANQUE = :codigotanque
+    //   order by
+    //     dt_cad,
+    //     CODIGOTPFROTA,
+    //     prefixoveic,
+    //     dt
+    // `, {
+    //   d1: format(subDays(new Date(), 90), "yyyy-MM-dd"),
+    //   d2: format(new Date(), "yyyy-MM-dd"),
+    //   codigotanque: item.globus_codigotanque
+    // })
 
-      // console.log(data.length > 0 ? data[0] : [])
+    // console.log(data.length > 0 ? data[0] : [])
 
-      // const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
-      //   let prefixo: string | number = row.PREFIXOVEIC
-      //   // Verificar se prefixo tem letras
-      //   if (/[a-zA-Z]/.test(prefixo)) {
-      //     prefixo = prefixo
-      //   } else {
-      //     prefixo = Number.parseInt(prefixo, 10)
-      //   }
+    // const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
+    //   let prefixo: string | number = row.PREFIXOVEIC
+    //   // Verificar se prefixo tem letras
+    //   if (/[a-zA-Z]/.test(prefixo)) {
+    //     prefixo = prefixo
+    //   } else {
+    //     prefixo = Number.parseInt(prefixo, 10)
+    //   }
 
-      //   return {
-      //     company_id: item.company_id,
-      //     globus_ip: item.globus_ip,
-      //     prefixoveic: prefixo,
-      //     dt: row.DT,
-      //     qtdeitemabastcarro: row.QTDEITEMABASTCARRO,
-      //     km_abastecimento: row.KMINICIALVEIC,
-      //     dt_cad: row.DT_CAD
-      //   }
-      // })
+    //   return {
+    //     company_id: item.company_id,
+    //     globus_ip: item.globus_ip,
+    //     prefixoveic: prefixo,
+    //     dt: row.DT,
+    //     qtdeitemabastcarro: row.QTDEITEMABASTCARRO,
+    //     km_abastecimento: row.KMINICIALVEIC,
+    //     dt_cad: row.DT_CAD
+    //   }
+    // })
 
-      // if (insertList.length > 0) {
-      //   await api.post("/inbound/globus/abastecimento", {
-      //     id_empresa: process.env.ID_EMPRESA,
-      //     token: process.env.TOKEN,
-      //     data: insertList
-      //   })
-      // }
+    // if (insertList.length > 0) {
+    //   await api.post("/inbound/globus/abastecimento", {
+    //     id_empresa: process.env.ID_EMPRESA,
+    //     token: process.env.TOKEN,
+    //     data: insertList
+    //   })
+    // }
 
-      const data = await db.raw(`
+    const data = await db.raw(`
         select
           prefixoveic,
           BGM_VELOCIMETRO.CODIGOVEIC,
@@ -138,40 +138,40 @@ const executar = async () => {
           data_hora  
       `)
 
-      console.log(data.length > 0 ? data[0] : [])
+    console.log(data.length > 0 ? data[0] : [])
 
-      const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
-        let prefixo: string | number = row.PREFIXOVEIC
-        // Verificar se prefixo tem letras
-        if (/[a-zA-Z]/.test(prefixo)) {
-          prefixo = prefixo
-        } else {
-          prefixo = Number.parseInt(prefixo, 10)
-        }
-
-        return {
-          company_id: item.company_id,
-          globus_ip: item.globus_ip,
-          prefixoveic: prefixo,
-          codigoveic: row.CODIGOVEIC,
-          data_hora: row.DATA_HORA,
-          lt: row.LT,
-          hodinicialveloc: row.HODINICIALVELOC,
-          hodfinalveloc: row.HODFINALVELOC,
-          kmpercorridoveloc: row.KMPERCORRIDOVELOC,
-          kmacumuladoveloc: row.KMACUMULADOVELOC,
-          kmlitroveic: row.KMLITROVEIC
-        }
-      })
-
-      if (insertList.length > 0) {
-        await api.post("/inbound/globus/abastecimento", {
-          id_empresa: process.env.ID_EMPRESA,
-          token: process.env.TOKEN,
-          data: insertList
-        })
+    const insertList: IAbastecimentoInsert[] = data.map((row: IAbastecimentoRow): IAbastecimentoInsert => {
+      let prefixo: string | number = row.PREFIXOVEIC
+      // Verificar se prefixo tem letras
+      if (/[a-zA-Z]/.test(prefixo)) {
+        prefixo = prefixo
+      } else {
+        prefixo = Number.parseInt(prefixo, 10)
       }
+
+      return {
+        company_id: Number.parseInt(process.env.ID_EMPRESA as string, 10),
+        globus_ip: process.env.ORCL_HOST as string,
+        prefixoveic: prefixo,
+        codigoveic: row.CODIGOVEIC,
+        data_hora: row.DATA_HORA,
+        lt: row.LT,
+        hodinicialveloc: row.HODINICIALVELOC,
+        hodfinalveloc: row.HODFINALVELOC,
+        kmpercorridoveloc: row.KMPERCORRIDOVELOC,
+        kmacumuladoveloc: row.KMACUMULADOVELOC,
+        kmlitroveic: row.KMLITROVEIC
+      }
+    })
+
+    if (insertList.length > 0) {
+      await api.post("/inbound/globus/abastecimento", {
+        id_empresa: process.env.ID_EMPRESA,
+        token: process.env.TOKEN,
+        data: insertList
+      })
     }
+    // }
   } catch (error) {
     console.error("Erro ao executar a requisição:", error)
   }
