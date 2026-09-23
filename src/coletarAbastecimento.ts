@@ -35,7 +35,7 @@ interface IAbastecimentoInsert {
 const api = axios.create({
   baseURL: process.env.API_BASE_URL as string,
   headers: {
-    Authorization: `Bearer ${process.env.API_TOKEN}`
+    Authorization: `Bearer ${process.env.TOKEN}`
   }
 })
 
