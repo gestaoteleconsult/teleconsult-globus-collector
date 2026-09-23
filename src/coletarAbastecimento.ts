@@ -50,6 +50,8 @@ const executar = async () => {
       }
     })
 
+    console.log(config.data)
+
     for await (const item of config.data) {
       const data = await db.raw(`
         select
