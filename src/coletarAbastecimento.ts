@@ -40,6 +40,25 @@ interface IAbastecimentoInsert {
   kmlitroveic: number
 }
 
+interface IAbastecimentoInsert2 {
+  company_id: number
+  globus_ip: string
+  prefixoveic: string | number
+  dt: string
+  qtdeitemabastcarro: number
+  km_abastecimento: number
+  dt_cad: string
+}
+
+interface IAbastecimentoRow2 {
+  PREFIXOVEIC: string
+  DT: string
+  QTDEITEMABASTCARRO: number
+  KM_ABASTECIMENTO: number
+  DT_CAD: string
+  KMINICIALVEIC: number
+}
+
 const api = axios.create({
   baseURL: process.env.API_BASE_URL as string,
   headers: {
@@ -168,7 +187,7 @@ const executar = async () => {
     })
 
     if (insertList.length > 0) {
-      await api.post("/inbound/globus/abastecimento", {
+      await api.post("/inbound/globus/abastecimento/velocimetro", {
         id_empresa: process.env.ID_EMPRESA,
         token: process.env.TOKEN,
         data: insertList
@@ -180,12 +199,89 @@ const executar = async () => {
   }
 }
 
+const executarAbastecimento = async () => {
+  try {
+    const db = DbOracle.getConnection()
+
+    const config = await api.get<IGlobusAbastecimentoConfig[]>("/inbound/globus/config", {
+      params: {
+        id_empresa: process.env.ID_EMPRESA,
+        globus_ip: process.env.ORCL_HOST
+      }
+    })
+
+    console.log(config.data)
+
+    for await (const item of config.data) {
+      const data = await db.raw(`
+      select
+        prefixoveic,
+        to_char(DATAABASTCARRO,'yyyy-mm-dd') dt,
+        QTDEITEMABASTCARRO,
+        to_char(DATAHORAGRAVACAO,'yyyy-mm-dd hh24:mi:ss') dt_cad,
+        kminicialveic
+      from
+        ABA_ITEMABASTCARRO 
+      left join frt_cadveiculos
+        on frt_cadveiculos.codigoveic = ABA_ITEMABASTCARRO.CODIGOVEIC
+      where
+        ABA_ITEMABASTCARRO.DATAABASTCARRO between to_date(:d1,'yyyy-mm-dd') and to_date(:d2,'yyyy-mm-dd')
+        and CODIGOTANQUE = :codigotanque
+      order by
+        dt_cad,
+        CODIGOTPFROTA,
+        prefixoveic,
+        dt
+    `, {
+        d1: format(subDays(new Date(), 90), "yyyy-MM-dd"),
+        d2: format(new Date(), "yyyy-MM-dd"),
+        codigotanque: item.globus_codigotanque
+      })
+
+      console.log(data.length > 0 ? data[0] : [])
+
+      const insertList: IAbastecimentoInsert2[] = data.map((row: IAbastecimentoRow2): IAbastecimentoInsert2 => {
+        let prefixo: string | number = row.PREFIXOVEIC
+        // Verificar se prefixo tem letras
+        if (/[a-zA-Z]/.test(prefixo)) {
+          prefixo = prefixo
+        } else {
+          prefixo = Number.parseInt(prefixo, 10)
+        }
+
+        return {
+          company_id: item.company_id,
+          globus_ip: item.globus_ip,
+          prefixoveic: prefixo,
+          dt: row.DT,
+          qtdeitemabastcarro: row.QTDEITEMABASTCARRO,
+          km_abastecimento: row.KMINICIALVEIC,
+          dt_cad: row.DT_CAD
+        }
+      })
+
+      if (insertList.length > 0) {
+        await api.post("/inbound/globus/abastecimento", {
+          id_empresa: process.env.ID_EMPRESA,
+          token: process.env.TOKEN,
+          data: insertList
+        })
+      }
+    }
+  } catch (error) {
+    console.error("Erro ao executar o abastecimento:", error)
+  }
+}
+
+
 executar()
+executarAbastecimento()
 
 const job = new CronJob(
   '0 0 3 * * *', // cronTime
   function () {
     executar()
+    executarAbastecimento()
   }, // onTick
   null, // onComplete
   true, // start
