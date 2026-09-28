@@ -156,10 +156,10 @@ const executar = async () => {
         prefixoveic,
         data_hora  
       `, {
-      d1: "2026-01-01",
-      d2: "2026-09-24",
-      // d1: format(subDays(new Date(), 90), "yyyy-MM-dd"),
-      // d2: format(new Date(), "yyyy-MM-dd")
+      // d1: "2026-01-01",
+      // d2: "2026-09-24",
+      d1: format(subDays(new Date(), 90), "yyyy-MM-dd"),
+      d2: format(new Date(), "yyyy-MM-dd")
     })
 
     console.log(data.length > 0 ? data[0] : [])
